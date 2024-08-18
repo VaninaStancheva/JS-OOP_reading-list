@@ -1,8 +1,8 @@
 class BookList {
     constructor () {
         this.bookList = [];
-        this.readBooks = this.readBooksCounter();
-        this.notReadBooks = this.notReadBooksCounter();
+        this.readBooks = 0;
+        this.notReadBooks = 0;
         this.nextBook = {};
         this.currentBook = {};
         this.lastBook = {};
@@ -10,23 +10,23 @@ class BookList {
 
     addBook (book) {
         this.bookList.push(book);
+        this.setBookListState();
     }
 
-    finishCurrentBook (book) {
-        book.isRead = true;
-        book.readDate = new Date (Date.now());
-        this.lastBook = book;
+    finishCurrentBook () {
+        this.currentBook.readDate = new Date(Date.now());
+        this.currentBook.isRead = true;
+        this.readBooks++;
+        this.lastBook = this.currentBook;
+        this.setBookListState()
     }
 
-    readBooksCounter() {
-        this.finishCurrentBook()
-        return this.bookList.filter(book => book.isRead === true).length;
+    setBookListState() {
+        const notReadBooks = this.bookList.filter(notReadBook => !notReadBook.isRead);
+        this.notReadBooks = notReadBooks.length;
+        this.currentBook = notReadBooks[0];
+        this.nextBook = notReadBooks[1];
     }
-
-    notReadBooksCounter() {
-        return this.bookList.filter(book => book.isRead === false).length;
-    }
-
 }
 
 module.exports = BookList;
